@@ -10,6 +10,7 @@ class UserType(str, enum.Enum):
 
 class User(Base):
     __tablename__ = "users"
+
     id = Column(Integer, primary_key=True, index=True)
     full_name = Column(String, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
@@ -21,6 +22,7 @@ class User(Base):
 
 class BusinessProfile(Base):
     __tablename__ = "business_profile"
+
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
     business_name = Column(String, index=True)
