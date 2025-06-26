@@ -1,4 +1,7 @@
 import enum
+
+from sqlalchemy.orm import relationship
+
 from app.db.base_class import Base
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Float, DateTime, Text
 class ServiceCategory(Base):
@@ -19,12 +22,15 @@ class Job(Base):
     title = Column(String, index=True)
     location = Column(String, index=True)
     job_type = Column(Enum(TypeOfJob), nullable=False)
-    category = Column(Integer, ForeignKey("business_categories.id"))
+    category_id = Column(Integer, ForeignKey("business_categories.id"))
     salary = Column(Float, nullable=True)
     application_email = Column(String, index=True)
     application_url = Column(String, index=True)
     description = Column(Text, index=True)
     requirements = Column(Text, index=True)
+
+    business = relationship("BusinessProfile", backref="jobs")
+    category = relationship("BusinessCategories", backref="jobs")
 
 
 
