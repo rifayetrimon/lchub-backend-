@@ -56,7 +56,7 @@ def run_migrations_online() -> None:
 
     async def run_async_migration():
         async with connectable.connect() as connection:
-            await connection.run_sync(do_run_migrations())
+            await connection.run_sync(do_run_migrations)
 
     def do_run_migrations(connection):
         context.configure(
