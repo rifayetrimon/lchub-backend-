@@ -14,4 +14,4 @@ class Review(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     service = relationship("Service", back_populates="reviews")
-    user = relationship("User", back_populatjes="reviews")
+    user = relationship("User", back_populates="reviews")

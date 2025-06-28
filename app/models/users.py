@@ -33,7 +33,7 @@ class BusinessProfile(Base):
     user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
     business_type = Column(Enum(BusinessType), nullable=False)
     business_name = Column(String, index=True, nullable=True)
-    category_id = Column(Integer, ForeignKey("business_categories.id"), nullable=False)
+    category_id = Column(Integer, ForeignKey("service_categories.id"), nullable=False)
     address = Column(String, nullable=False)
     phone = Column(String, nullable=False)
     registration_number = Column(String, nullable=True)
