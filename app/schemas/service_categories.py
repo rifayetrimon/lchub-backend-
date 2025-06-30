@@ -17,4 +17,5 @@ class ServiceCategory(BaseModel):
     name: str
 
 class ReadServiceCategory(BaseServiceCategory):
+    id: int
     pass

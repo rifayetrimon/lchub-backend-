@@ -17,4 +17,5 @@ class DeleteService(BaseService):
     pass
 
 class ReadService(BaseService):
+    id: int
     pass
