@@ -11,7 +11,6 @@ class Review(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     rating = Column(Float, nullable=False)  # e.g., 1.0 to 5.0
     comment = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
     service = relationship("Service", back_populates="reviews")
     user = relationship("User", back_populates="reviews")
