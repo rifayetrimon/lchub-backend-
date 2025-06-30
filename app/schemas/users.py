@@ -1,5 +1,4 @@
 import enum
-
 from pydantic import BaseModel, EmailStr, Field, root_validator, model_validator
 from typing import Optional
 
@@ -42,3 +41,4 @@ class UserCreate(UserBase):
         if user_type == UserType.business:
             if not business_profile:
                 raise ValueError("Business profile is required for business users.")
+

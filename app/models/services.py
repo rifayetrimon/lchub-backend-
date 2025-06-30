@@ -15,4 +15,4 @@ class Service(Base):
     created_by = Column(Integer, ForeignKey("users.id"))
 
     user = relationship("User", back_populates="services")
-    category = relationship("ServiceCategory", back_populates="services")  # <-- Add this
+    category = relationship("ServiceCategory", back_populates="services")
