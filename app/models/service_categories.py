@@ -11,4 +11,4 @@ class ServiceCategory(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
-    services = relationship("Service", back_populates="category")  # <-- Add this
+    services = relationship("Service", back_populates="category")

@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-
 from app.db.base_class import Base
 
 
@@ -8,7 +7,7 @@ class Service(Base):
     __tablename__ = "services"
 
     id = Column(Integer, primary_key=True, index=True)
-    service_category_id = Column(Integer, ForeignKey("service_categories.id"), nullable=False)  # <-- Add this
+    service_category_id = Column(Integer, ForeignKey("service_categories.id"), nullable=False)
     name = Column(String, index=True, nullable=False)
     address = Column(String, index=True, nullable=False)
     phone = Column(String, index=True, nullable=False)
@@ -16,3 +15,4 @@ class Service(Base):
 
     user = relationship("User", back_populates="services")
     category = relationship("ServiceCategory", back_populates="services")
+    reviews = relationship("Review", back_populates="service")

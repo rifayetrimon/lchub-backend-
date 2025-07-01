@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 from app.db.session import engine
 from sqlalchemy import text
+from app.api.v1 import users
 
 app = FastAPI()
 
@@ -9,6 +10,8 @@ app = FastAPI()
 async def read_root():
     return {"message": "Hello, World!"}
 
+
+app.include_router(users.router)
 
 @app.get("/health/db")
 async def check_db_connection():

@@ -26,7 +26,6 @@ class Job(Base):
     requirements = Column(Text, index=True)
 
     business = relationship("BusinessProfile", back_populates="jobs")
-    category = relationship("JobCategories", back_populates="jobs")
+    category = relationship("JobCategory", back_populates="jobs")
     job_applications = relationship("JobApplication", back_populates="job")
-
 
