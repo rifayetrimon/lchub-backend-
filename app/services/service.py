@@ -1,0 +1,66 @@
+from sqlalchemy.future import select
+from sqlalchemy.ext.asyncio import AsyncSession
+import logging
+from app.models.users import User
+from app.models.service import Service
+from fastapi import HTTPException, status
+from app.schemas.service import CreateService, ServiceResponse
+from sqlalchemy import and_
+
+
+
+logger = logging.getLogger(__name__)
+
+
+
+class TypeServices:
+
+    @staticmethod
+    async def _verify_user_authorization(user: User):
+        if user.user_type not in ["student", "business"]:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid user type",
+            )
+
+    @staticmethod
+    async def create_service(user: User, service_data: CreateService, db: AsyncSession):
+        try:
+            await TypeServices._verify_user_authorization(user)
+
+            existing = await db.execute(
+                select(Service).where(
+                    and_(Service.name == service_data.name, Service.created_by == user.id)
+                )
+            )
+
+            if existing.scalar():
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="Service already exists",
+                )
+
+            new_service = Service(
+                **service_data.model_dump(exclude={"created_by"}),
+                created_by=user.id
+            )
+
+            db.add(new_service)
+            await db.commit()  # Use await for async commit
+            await db.refresh(new_service)  # Use await for async refresh
+
+            return ServiceResponse(
+                name=new_service.name,
+                address=new_service.address,
+                phone=new_service.phone
+            )
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            await db.rollback()  # Rollback on error
+            logger.error(f"Service creation failed: {str(e)}", exc_info=True)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Service creation failed: {str(e)}",
+            )

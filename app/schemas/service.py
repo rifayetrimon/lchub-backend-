@@ -19,3 +19,10 @@ class DeleteService(BaseService):
 class ReadService(BaseService):
     id: int
     pass
+
+class ServiceResponse(BaseModel):
+    status: str
+    message: str
+    name: str
+    address: str
+    phone: str
