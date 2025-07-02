@@ -17,9 +17,15 @@ class UpdateService(BaseService):
 class DeleteService(BaseService):
     pass
 
-class ReadService(BaseService):
+class ServiceRead(BaseModel):
     id: int
-    pass
+    name: str
+    address: str
+    phone: str
+    service_category_id: int
+
+    class Config:
+        from_attributes = True
 
 class ServiceResponse(BaseModel):
     status: str
@@ -27,3 +33,4 @@ class ServiceResponse(BaseModel):
     name: str
     address: str
     phone: str
+

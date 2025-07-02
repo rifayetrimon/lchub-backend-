@@ -64,3 +64,17 @@ class TypeServices:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Service creation failed: {str(e)}",
             )
+
+
+    @staticmethod
+    async def get_all_services(db: AsyncSession):
+        try:
+            result = await db.execute(select(Service))
+            services = result.scalars().all()
+            return services
+        except Exception as e:
+            logger.error(f"Service retrieval failed: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Service retrieval failed: {str(e)}",
+            )

@@ -1,7 +1,8 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
-from app.schemas.service import CreateService, ServiceResponse
+from app.schemas.service import CreateService, ServiceResponse, ServiceRead
 from app.models.users import User
 from app.api.deps import get_current_user
 from app.services.service import TypeServices
@@ -23,3 +24,9 @@ async def create_service(
     new_service = await TypeServices.create_service(current_user, service, db)
 
     return new_service
+
+
+@router.get("/", response_model=List[ServiceRead])
+async def read_all_services(db: AsyncSession = Depends(get_db)):
+    services = await TypeServices.get_all_services(db)
+    return services
