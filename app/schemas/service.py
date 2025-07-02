@@ -8,6 +8,7 @@ class BaseService(BaseModel):
 
 
 class CreateService(BaseService):
+    service_category_id: int
     pass
 
 class UpdateService(BaseService):
