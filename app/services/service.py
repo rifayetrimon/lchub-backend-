@@ -78,3 +78,26 @@ class TypeServices:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Service retrieval failed: {str(e)}",
             )
+
+
+    @staticmethod
+    async def get_service(service_id: int, db: AsyncSession):
+        try:
+            result = await db.execute(select(Service).where(Service.id == service_id))
+            service = result.scalar_one_or_none()
+
+            if not service:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Service not found",
+                )
+            return service
+        except Exception as e:
+            logger.error(f"Service retrieval failed: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Service retrieval failed: {str(e)}",
+            )
+
+
+    # @staticmethod

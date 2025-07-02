@@ -30,3 +30,9 @@ async def create_service(
 async def read_all_services(db: AsyncSession = Depends(get_db)):
     services = await TypeServices.get_all_services(db)
     return services
+
+
+@router.get("/{id}", response_model=ServiceRead)
+async def read_service(id: int, db: AsyncSession = Depends(get_db)):
+    service = await TypeServices.get_service(id, db)
+    return service
