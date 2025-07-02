@@ -1,10 +1,9 @@
 from fastapi import FastAPI
 import uvicorn
-
 from app import services
 from app.db.session import engine
 from sqlalchemy import text
-from app.api.v1 import users, service
+from app.api.v1 import users, service, service_categories
 
 app = FastAPI()
 
@@ -15,6 +14,8 @@ async def read_root():
 
 app.include_router(users.router)
 app.include_router(service.router)
+
+app.include_router(service_categories.router)
 
 @app.get("/health/db")
 async def check_db_connection():
