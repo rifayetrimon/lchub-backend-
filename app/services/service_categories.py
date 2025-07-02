@@ -47,3 +47,47 @@ class ServiceCategoriesService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to create new service category",
             )
+
+
+    @staticmethod
+    async def get_service_categories(db: AsyncSession):
+        try:
+            result = await db.execute(select(ServiceCategory))
+            categories = result.scalars().all()
+            return categories
+        except Exception as e:
+            logger.error(f"Failed to get service categories: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to get service categories",
+            )
+
+
+    # @staticmethod
+    # async def get_service_category_by_id(service_category_id: int, db: AsyncSession):
+    #
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
