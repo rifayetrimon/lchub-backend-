@@ -12,6 +12,7 @@ class CreateService(BaseService):
     pass
 
 class UpdateService(BaseService):
+    service_category_id: int
     pass
 
 class DeleteService(BaseService):

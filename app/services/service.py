@@ -4,7 +4,7 @@ import logging
 from app.models.users import User
 from app.models.service import Service
 from fastapi import HTTPException, status
-from app.schemas.service import CreateService, ServiceResponse
+from app.schemas.service import CreateService, ServiceResponse, UpdateService
 from sqlalchemy import and_
 
 
@@ -99,5 +99,59 @@ class TypeServices:
                 detail=f"Service retrieval failed: {str(e)}",
             )
 
+    @staticmethod
+    async def update_service(service_id: int, user: User, service_data: UpdateService, db: AsyncSession):
+        await TypeServices._verify_user_authorization(user)
 
-    # @staticmethod
+        service = await TypeServices.get_service(service_id, db)
+
+        if service.created_by != user.id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not authorized to update this service",
+            )
+
+        update_data = service_data.model_dump(exclude_unset=True, exclude={"created_by"})
+        for key, value in update_data.items():
+            setattr(service, key, value)
+
+        try:
+            await db.commit()
+            await db.refresh(service)
+            return service
+        except Exception as e:
+            await db.rollback()
+            logger.error(f"Service update failed: {str(e)}", exc_info=True)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Service update failed: {str(e)}",
+            )
+
+
+    @staticmethod
+    async def delete_service(service_id: int, user: User, db: AsyncSession):
+        await TypeServices._verify_user_authorization(user)
+
+        # Fetch the service to delete
+        service = await TypeServices.get_service(service_id, db)
+
+        # Check if the service belongs to the user (optional)
+        if service.created_by != user.id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not authorized to delete this service",
+            )
+
+        try:
+            await db.delete(service)
+            await db.commit()
+            return {"status": "success", "message": "Service deleted successfully"}
+        except Exception as e:
+            await db.rollback()
+            logger.error(f"Service deletion failed: {str(e)}", exc_info=True)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Service deletion failed: {str(e)}",
+            )
+
+
