@@ -24,6 +24,9 @@ class CreateJob(BaseJob):
     business_id: int
     pass
 
+    class Config:
+        from_attributes = True
+
 class UpdateJob(BaseJob):
     pass
 
