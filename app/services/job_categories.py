@@ -17,7 +17,7 @@ class JobCategoriesService(BaseService):
     @staticmethod
     async def create_job_category(job_category_date: CreateJobCategory, db: AsyncSession):
         try:
-            exixting_category = await db.execute(
+            existing_category = await db.execute(
                 select(JobCategory).where(
                     and_(
                         JobCategory.name == job_category_date.name,
@@ -25,7 +25,7 @@ class JobCategoriesService(BaseService):
                 )
             )
 
-            if exixting_category.scalar():
+            if existing_category.scalar():
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
                     detail="Job category already exists",
