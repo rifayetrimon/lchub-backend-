@@ -55,8 +55,6 @@ class TypeServices:
                 phone=new_service.phone
             )
 
-        except HTTPException:
-            raise
         except Exception as e:
             await db.rollback()  # Rollback on error
             logger.error(f"Service creation failed: {str(e)}", exc_info=True)

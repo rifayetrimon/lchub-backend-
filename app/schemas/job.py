@@ -21,6 +21,7 @@ class BaseJob(BaseModel):
 
 
 class CreateJob(BaseJob):
+    business_id: int
     pass
 
 class UpdateJob(BaseJob):
@@ -32,5 +33,21 @@ class DeleteJob(BaseJob):
 class ReadJob(BaseJob):
     id: int
     pass
+
+    class Config:
+        from_attributes = True
+
+
+class ServiceResponse(BaseModel):
+    status: str
+    message: str
+    job_type: TypeOfJob
+    title: str
+    location: str
+    salary: float
+    application_email: str
+    application_url: str
+    description: str
+    requirements: str
 
 
