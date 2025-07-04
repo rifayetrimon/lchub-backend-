@@ -88,7 +88,6 @@ class ServiceCategoriesService:
             )
 
 
-
     @staticmethod
     async def update_service_category(service_category_id: int, service_category_data: UpdateServiceCategory, db: AsyncSession):
         try:
