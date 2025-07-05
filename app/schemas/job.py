@@ -1,4 +1,6 @@
 import enum
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -13,7 +15,7 @@ class BaseJob(BaseModel):
     job_type: TypeOfJob
     title: str
     location: str
-    salary: float
+    salary: Optional[float]
     application_email: str
     application_url: str
     description: str

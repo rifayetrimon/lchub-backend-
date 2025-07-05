@@ -68,3 +68,39 @@ class JobService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to create job",
             )
+
+
+    @staticmethod
+    async def get_all_jobs(db: AsyncSession):
+        try:
+            job = await db.execute(
+                select(Job)
+            )
+
+            jobs = job.scalars().all()
+            return jobs
+
+        except Exception as e:
+            logger.error(f"Failed to get all jobs: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to get all jobs",
+            )
+
+    @staticmethod
+    async def get_job_by_id(job_id: int, db: AsyncSession):
+        try:
+            job = await db.execute(
+                select(Job).where(Job.id == job_id)
+            )
+
+            rslt = job.scalar_one_or_none()
+
+            return rslt
+
+        except Exception as e:
+            logger.error(f"Failed to get job by id: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to get job by id",
+            )

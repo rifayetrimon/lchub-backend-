@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -5,7 +7,7 @@ from starlette import status
 from app.api.deps import get_current_user
 from app.db.session import get_db
 from app.models import User
-from app.schemas.job import ServiceResponse, CreateJob
+from app.schemas.job import ServiceResponse, CreateJob, ReadJob
 from app.services.job import JobService
 
 
@@ -24,3 +26,12 @@ async def create_job(job: CreateJob, db: AsyncSession = Depends(get_db), current
 
     return new_job
 
+@router.get("/", response_model=List[ReadJob])
+async def get_all_jobs(db: AsyncSession = Depends(get_db)):
+    return await JobService.get_all_jobs(db)
+
+
+
+@router.get("/{id}", response_model=ReadJob)
+async def get_job_by_id(id: int, db: AsyncSession = Depends(get_db)):
+    return await JobService.get_job_by_id(id, db)
