@@ -157,3 +157,21 @@ class JobService:
             )
 
 
+
+    @staticmethod
+    async def delete_job(job_id: int, user: User, db: AsyncSession):
+        await JobService._verify_user_type_authentication(user)
+
+        job = await JobService.get_job_by_id(job_id, db)
+
+        if not job:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Job not found",
+            )
+
+        await db.delete(job)
+        await db.commit()
+        await db.refresh(job)
+        return ReadJob.from_orm(job)
+

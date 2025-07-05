@@ -46,3 +46,10 @@ async def update_job(
 ):
     updated_job = await JobService.update_job(id, current_user, job, db)
     return updated_job
+
+
+
+@router.delete("/{id}", response_model=ReadJob)
+async def delete_job(id: int, db: AsyncSession = Depends(get_db)):
+    job = await JobService.delete_job(id, db)
+    return job
