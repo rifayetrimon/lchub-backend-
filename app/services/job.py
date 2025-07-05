@@ -4,7 +4,7 @@ from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import User, BusinessProfile
 from app.models.jobs import Job
-from app.schemas.job import CreateJob, ServiceResponse
+from app.schemas.job import CreateJob, ServiceResponse, UpdateJob, ReadJob
 
 logger = logging.getLogger(__name__)
 
@@ -104,3 +104,56 @@ class JobService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to get job by id",
             )
+
+    @staticmethod
+    async def update_job(job_id: int, user: User, job_data_update: UpdateJob, db: AsyncSession):
+        await JobService._verify_user_type_authentication(user)
+
+        # Get the job
+        job = await JobService.get_job_by_id(job_id, db)
+        if not job:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Job not found",
+            )
+
+        # Get the business profile for the current user
+        result = await db.execute(
+            select(BusinessProfile).where(BusinessProfile.user_id == user.id)
+        )
+        business_profile = result.scalars().first()
+
+        if not business_profile:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Business profile not found for the user",
+            )
+
+        # Check if the job belongs to the user's business profile
+        if job.business_id != business_profile.id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="You are not authorized to update this job",
+            )
+
+        # Update the job fields
+        update_data = job_data_update.model_dump(exclude_unset=True, exclude={"business_id"})
+        for key, value in update_data.items():
+            setattr(job, key, value)
+
+        try:
+            await db.commit()
+            await db.refresh(job)
+
+            # Return updated job as ReadJob schema
+            return ReadJob.from_orm(job)
+
+        except Exception as e:
+            logger.error(f"Failed to update job: {str(e)}", exc_info=True)
+            await db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to update job",
+            )
+
+
