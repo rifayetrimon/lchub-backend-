@@ -41,3 +41,19 @@ class BusinessCategoriesService(BaseService):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to create business category",
             )
+
+
+    @staticmethod
+    async def get_all_business_categories(db: AsyncSession):
+        try:
+            business_categories = await db.execute(
+                select(BusinessCategory)
+            )
+            categories = business_categories.scalars().all()
+            return categories
+        except Exception as e:
+            logger.error(f"Failed to get business categories: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to get business categories",
+            )

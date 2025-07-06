@@ -1,7 +1,9 @@
+from typing import List
+
 from fastapi import APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
-from app.schemas.business_categories import CreateBusinessCategories
+from app.schemas.business_categories import CreateBusinessCategories, ReadBusinessCategories
 from fastapi import Depends, HTTPException, status
 from app.services.business_categories import BusinessCategoriesService
 
@@ -15,5 +17,9 @@ async def Create_business_categories(business_categories_data: CreateBusinessCat
 
 
 
+@router.get("/", response_model=List[ReadBusinessCategories], status_code=status.HTTP_200_OK)
+async def get_all_business_categories(db: AsyncSession = Depends(get_db)):
+    categories = await BusinessCategoriesService.get_all_business_categories(db)
+    return categories
 
 
