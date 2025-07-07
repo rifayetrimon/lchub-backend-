@@ -3,7 +3,7 @@ import uvicorn
 from app import services
 from app.db.session import engine
 from sqlalchemy import text
-from app.api.v1 import users, service, service_categories, job_categories, job, business_categories, job_application, review
+from app.api.v1 import users, service, service_categories, job_categories, job, business_categories, job_application, review, emergency_contact
 
 
 app = FastAPI()
@@ -21,6 +21,7 @@ app.include_router(job.router)
 app.include_router(business_categories.router)
 app.include_router(job_application.router)
 app.include_router(review.router)
+app.include_router(emergency_contact.router)
 
 @app.get("/health/db")
 async def check_db_connection():

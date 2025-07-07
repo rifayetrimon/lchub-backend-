@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, Float
 from app.db.base_class import Base
 
 
@@ -9,3 +9,5 @@ class EmergencyContact(Base):
     name = Column(String, index=True, nullable=False)
     address = Column(String, index=True, nullable=False)
     phone = Column(String, index=True, nullable=False)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
