@@ -4,7 +4,10 @@ from sqlalchemy.future import select
 from fastapi import Depends, HTTPException, status
 from app.models import BusinessCategory
 from app.schemas.service import BaseService
-from app.schemas.business_categories import CreateBusinessCategories
+from app.schemas.business_categories import CreateBusinessCategories, UpdateBusinessCategories
+
+
+
 
 logger = logging.getLogger(__name__)
 
@@ -56,4 +59,84 @@ class BusinessCategoriesService(BaseService):
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to get business categories",
+            )
+
+
+    @staticmethod
+    async def get_business_category_by_id(business_category_id: int, db: AsyncSession):
+        try:
+            business_category = await db.execute(
+                select(BusinessCategory).where(BusinessCategory.id == business_category_id)
+            )
+
+            category = business_category.scalar_one_or_none()
+
+            if not category:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Business category not found",
+                )
+            return category
+
+        except Exception as e:
+            logger.error(f"Failed to get business category by id: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to get business category by id",
+            )
+
+
+    @staticmethod
+    async def update_business_category(business_category_id: int, business_category_data: UpdateBusinessCategories, db: AsyncSession):
+        try:
+            result = await db.execute(
+                select(BusinessCategory).where(BusinessCategory.id == business_category_id)
+            )
+
+            category = result.scalar_one_or_none()
+
+            if not category:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Business category not found",
+                )
+
+            for key, value in business_category_data.model_dump().items():
+                setattr(category, key, value)
+
+            db.add(category)
+            await db.commit()
+            await db.refresh(category)
+            return category
+
+        except Exception as e:
+            logger.error(f"Failed to update business category by id: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to update business category by id",
+            )
+
+    @staticmethod
+    async def delete_business_category(business_category_id: int, db: AsyncSession):
+        try:
+            business_category = await db.execute(
+                select(BusinessCategory).where(BusinessCategory.id == business_category_id)
+            )
+
+            category = business_category.scalar_one_or_none()
+            if not category:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Business category not found",
+                )
+
+            await db.delete(category)
+            await db.commit()
+            await db.refresh(category)
+            return category
+        except Exception as e:
+            logger.error(f"Failed to delete business category by id: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to delete business category by id",
             )
