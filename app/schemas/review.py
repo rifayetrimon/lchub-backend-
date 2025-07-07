@@ -1,22 +1,14 @@
 from pydantic import BaseModel
 
-
-
 class BaseReview(BaseModel):
     rating: float
     comment: str
 
-
 class CreateReview(BaseReview):
-    pass
-
-class UpdateReview(BaseReview):
-    pass
-
-class DeleteReview(BaseReview):
-    pass
+    service_id: int
 
 class ReadReview(BaseReview):
     id: int
-    pass
 
+    class Config:
+        from_attributes = True
