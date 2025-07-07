@@ -11,7 +11,6 @@ from app.services.job_application import JobApplicationService
 router = APIRouter(prefix="/job-application", tags=["job-application"])
 
 
-
 @router.post("/apply", response_model=ReadJobApplication, status_code=status.HTTP_201_CREATED)
 async def create_job_application(
     job_application_data: CreateJobApplication,
@@ -20,8 +19,3 @@ async def create_job_application(
 ):
     new_application = await JobApplicationService.create_job_application(db, job_application_data, user)
     return ReadJobApplication.model_validate(new_application)
-
-
-
-
-

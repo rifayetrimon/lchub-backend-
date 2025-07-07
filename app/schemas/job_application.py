@@ -16,6 +16,7 @@ class BaseJobApplication(BaseModel):
 
 
 class CreateJobApplication(BaseJobApplication):
+    job_id: int
     pass
 
 
@@ -29,7 +30,8 @@ class DeleteJobApplication(BaseJobApplication):
 
 class ReadJobApplication(BaseJobApplication):
     id: int
-    pass
+    user_id: int
+    job_id: int
 
     class Config:
         from_attributes = True
