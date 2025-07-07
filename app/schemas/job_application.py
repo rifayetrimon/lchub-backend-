@@ -30,3 +30,6 @@ class DeleteJobApplication(BaseJobApplication):
 class ReadJobApplication(BaseJobApplication):
     id: int
     pass
+
+    class Config:
+        from_attributes = True
