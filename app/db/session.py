@@ -23,15 +23,15 @@ async_session = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=
 
 
 # get db session
-# async def get_db():
-#     async with async_session() as session:
-#         yield session
-
-
 async def get_db():
     async with async_session() as session:
-        logger.info(f"Session started: {id(session)}")
-        try:
-            yield session
-        finally:
-            logger.info(f"Session closed: {id(session)}")
+        yield session
+
+
+# async def get_db():
+#     async with async_session() as session:
+#         logger.info(f"Session started: {id(session)}")
+#         try:
+#             yield session
+#         finally:
+#             logger.info(f"Session closed: {id(session)}")
