@@ -6,6 +6,7 @@ from app.models.service import Service
 from fastapi import HTTPException, status
 from app.schemas.service import CreateService, ServiceResponse, UpdateService
 from sqlalchemy import and_
+from sqlalchemy.orm import selectinload
 
 
 
@@ -65,9 +66,10 @@ class TypeServices:
 
 
     @staticmethod
-    async def get_all_services(db: AsyncSession):
+    async def get_all_services(db: AsyncSession, skip: int = 0, limit: int = 100):
         try:
-            result = await db.execute(select(Service))
+            stmt = select(Service).offset(skip).limit(limit)
+            result = await db.execute(stmt)
             services = result.scalars().all()
             return services
         except Exception as e:

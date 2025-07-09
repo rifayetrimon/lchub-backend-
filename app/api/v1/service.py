@@ -6,6 +6,7 @@ from app.schemas.service import CreateService, ServiceResponse, ServiceRead, Upd
 from app.models.users import User
 from app.api.deps import get_current_user
 from app.services.service import TypeServices
+from fastapi import Query
 
 router = APIRouter(prefix="/services", tags=["services"])
 
@@ -27,8 +28,12 @@ async def create_service(
 
 
 @router.get("/", response_model=List[ServiceRead])
-async def read_all_services(db: AsyncSession = Depends(get_db)):
-    services = await TypeServices.get_all_services(db)
+async def read_all_services(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    db: AsyncSession = Depends(get_db)
+):
+    services = await TypeServices.get_all_services(db, skip=skip, limit=limit)
     return services
 
 
