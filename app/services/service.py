@@ -66,7 +66,7 @@ class TypeServices:
 
 
     @staticmethod
-    async def get_all_services(db: AsyncSession, skip: int = 0, limit: int = 100):
+    async def get_all_services(db: AsyncSession, skip: int = 0, limit: int = 50):
         try:
             stmt = select(Service).offset(skip).limit(limit)
             result = await db.execute(stmt)
