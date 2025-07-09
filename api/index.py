@@ -1,12 +1,12 @@
 import os
+import sys
+# Add the parent directory to Python path so we can import from 'app'
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI
-import uvicorn
-from app import services
 from app.db.session import engine
 from sqlalchemy import text
 from app.api.v1 import users, service, service_categories, job_categories, job, business_categories, job_application, review, emergency_contact
-
 
 app = FastAPI()
 
@@ -14,7 +14,7 @@ app = FastAPI()
 async def read_root():
     return {"message": "Hello from FastAPI on Vercel!"}
 
-
+# Include all your routers
 app.include_router(users.router)
 app.include_router(service.router)
 app.include_router(service_categories.router)
@@ -34,10 +34,3 @@ async def check_db_connection():
     except Exception as e:
         import traceback
         return {"status": "Error!", "message": str(e), "trace": traceback.format_exc()}
-
-
-
-if __name__ == "__main__":
-    # uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
-    port = int(os.environ.get("PORT", 8000))  # Defaults to 8000 for local dev
-    uvicorn.run("app.main:app", host="0.0.0.0", port=port)
