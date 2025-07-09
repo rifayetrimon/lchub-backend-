@@ -1,7 +1,6 @@
 import logging
 import math
 from typing import Optional, List
-
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import status, HTTPException, Depends
 from sqlalchemy.future import select

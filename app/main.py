@@ -10,7 +10,7 @@ app = FastAPI()
 
 @app.get("/")
 async def read_root():
-    return {"message": "Hello, World!"}
+    return {"message": "Hello from FastAPI on Vercel!"}
 
 
 app.include_router(users.router)
