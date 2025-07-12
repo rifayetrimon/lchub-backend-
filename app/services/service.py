@@ -66,7 +66,7 @@ class TypeServices:
 
 
     @staticmethod
-    async def get_all_services(db: AsyncSession, skip: int = 0, limit: int = 50):
+    async def get_all_services(db: AsyncSession, skip: int = 0, limit: int = 10):
         try:
             stmt = select(Service).offset(skip).limit(limit)
             result = await db.execute(stmt)
@@ -78,6 +78,8 @@ class TypeServices:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Service retrieval failed: {str(e)}",
             )
+
+            
 
 
     @staticmethod
