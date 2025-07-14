@@ -47,11 +47,20 @@ async def read_all_services(
 
 
 
-
-@router.get("/{id}", response_model=ServiceRead)
-async def read_service(id: int, db: AsyncSession = Depends(get_db)):
-    service = await TypeServices.get_service(id, db)
-    return service
+@router.get(
+    "/{id}",
+    response_model=ServiceRead,
+    summary="Get a service by ID",
+    responses={
+        404: {"description": "Service not found"},
+        500: {"description": "Internal server error"},
+    },
+)
+async def read_service(
+    id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    return await TypeServices.get_service(service_id=id, db=db)
 
 
 @router.put("/{service_id}", response_model=ServiceRead, status_code=status.HTTP_200_OK)
