@@ -1,9 +1,9 @@
 import os
-
 from fastapi import FastAPI
 import uvicorn
 from app import services
-from app.db.session import engine
+from app.db.session import get_db
+# from app.db.session import engine
 from sqlalchemy import text
 from app.api.v1 import users, service, service_categories, job_categories, job, business_categories, job_application, review, emergency_contact
 
@@ -28,7 +28,7 @@ app.include_router(emergency_contact.router)
 @app.get("/health/db")
 async def check_db_connection():
     try:
-        async with engine.connect() as conn:
+        async with get_db() as conn:
             await conn.execute(text("SELECT 1"))
         return {"status": "Connected!"}
     except Exception as e:
