@@ -18,8 +18,8 @@ async def create_job_category(
 
 
 @router.get("/", response_model=List[ReadJobCategory], status_code=status.HTTP_200_OK)
-async def get_job_categories(db: AsyncSession = Depends(get_db)):
-    job_categories = await JobCategoriesService.get_job_categories(db)
+async def get_job_categories(skip: int = 0, db: AsyncSession = Depends(get_db)):
+    job_categories = await JobCategoriesService.get_job_categories(db, skip=skip)
     return job_categories
 
 

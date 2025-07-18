@@ -51,13 +51,13 @@ class JobCategoriesService(BaseService):
 
 
     @staticmethod
-    async def get_job_categories(db: AsyncSession):
+    async def get_job_categories(db: AsyncSession, skip: int = 0):
         try:
-            job_categories = await db.execute(
-                select(JobCategory)
-            )
-            categories = job_categories.scalars().all()
-            return categories
+            fixed_limit = 15  # Always return 15 items
+            stmt = select(JobCategory).offset(skip).limit(fixed_limit)
+            result = await db.execute(stmt)
+            job_categories = result.scalars().all()
+            return job_categories
 
         except Exception as e:
             logger.error(f"Failed to get job categories: {str(e)}")
