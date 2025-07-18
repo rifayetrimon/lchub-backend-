@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI
 import uvicorn
+from starlette.middleware.cors import CORSMiddleware
 from app import services
 from app.db.session import get_db
 # from app.db.session import engine
@@ -13,6 +14,20 @@ app = FastAPI()
 @app.get("/")
 async def read_root():
     return {"message": "Hello from FastAPI on Vercel!"}
+
+origins = [
+    "http://localhost:3000",        # Your local Next.js dev URL
+    "https://your-frontend.vercel.app",  # Your deployed frontend
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Or ["*"] to allow all
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 
 app.include_router(users.router)
