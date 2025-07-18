@@ -97,7 +97,7 @@ class TypeServices:
     @staticmethod
     async def get_service(service_id: int, db: AsyncSession):
         try:
-            stmt = select(Service).where(Service.id == service_id)
+            stmt = select(Service).where(Service.id == service_id)        # B-tree DS
             result = await db.execute(stmt)
             service = result.scalar_one_or_none()
 

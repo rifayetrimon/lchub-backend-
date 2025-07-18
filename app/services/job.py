@@ -71,21 +71,20 @@ class JobService:
 
 
     @staticmethod
-    async def get_all_jobs(db: AsyncSession):
+    async def get_all_jobs(db: AsyncSession, skip: int = 0):
         try:
-            job = await db.execute(
-                select(Job)
-            )
-
-            jobs = job.scalars().all()
+            fixed_limit = 15  # Always return 15 items
+            stmt = select(Job).offset(skip).limit(fixed_limit)
+            result = await db.execute(stmt)
+            jobs = result.scalars().all()
             return jobs
-
         except Exception as e:
-            logger.error(f"Failed to get all jobs: {str(e)}")
+            logger.error(f"Job retrieval failed: {str(e)}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to get all jobs",
+                detail=f"Job retrieval failed: {str(e)}",
             )
+
 
     @staticmethod
     async def get_job_by_id(job_id: int, db: AsyncSession):

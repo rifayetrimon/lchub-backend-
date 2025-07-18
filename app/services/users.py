@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from app.models.users import User, UserType, BusinessType, BusinessProfile
 from app.schemas.users import UserCreate
-from app.core.security import verify_password, create_access_token, hash_password
+from app.core.security import verify_password, hash_password
 from fastapi import HTTPException, status
 
 
