@@ -1,31 +1,70 @@
 import ssl
-from fastapi import logger
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from app.core.config import settings
 
-
-
+# SSL context for Neon (usually required)
 ssl_context = ssl.create_default_context()
 
-# database engine
+# ✅ Async engine with SSL (for Neon)
 engine = create_async_engine(
     settings.DATABASE_URL,
-    connect_args={
-        "ssl": ssl_context
-    },
-    echo=True, future=True
+    connect_args={"ssl": ssl_context},
+    echo=True,
+    future=True
 )
 
+# ✅ Correct async sessionmaker
+async_session = async_sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+)
 
-# session maker
-async_session = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
-
-
-# get db session
-async def get_db():
+# ✅ Session dependency to use in FastAPI
+async def get_db() -> AsyncSession:
     async with async_session() as session:
         yield session
+
+
+
+
+
+
+
+
+
+
+
+
+
+# import ssl
+# from fastapi import logger
+# from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+# from sqlalchemy.orm import sessionmaker
+# from app.core.config import settings
+
+
+
+# ssl_context = ssl.create_default_context()
+
+# # database engine
+# engine = create_async_engine(
+#     settings.DATABASE_URL,
+#     connect_args={
+#         "ssl": ssl_context
+#     },
+#     echo=True, future=True
+# )
+
+
+# # session maker
+# async_session = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
+
+
+# # get db session
+# async def get_db():
+#     async with async_session() as session:
+#         yield session
 
 
 # async def get_db():
