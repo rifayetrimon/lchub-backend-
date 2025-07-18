@@ -26,8 +26,8 @@ async def create_job(job: CreateJob, db: AsyncSession = Depends(get_db), current
     return new_job
 
 @router.get("/", response_model=List[ReadJob])
-async def get_all_jobs(db: AsyncSession = Depends(get_db)):
-    return await JobService.get_all_jobs(db)
+async def get_all_jobs(skip: int = 0, db: AsyncSession = Depends(get_db)):
+    return await JobService.get_all_jobs(db=db, skip=skip)
 
 
 
