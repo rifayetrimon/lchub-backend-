@@ -9,7 +9,7 @@ ssl_context = ssl.create_default_context()
 engine = create_async_engine(
     settings.DATABASE_URL,
     connect_args={"ssl": ssl_context},
-    echo=True,
+    echo=False,
     future=True
 )
 
