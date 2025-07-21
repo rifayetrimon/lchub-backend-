@@ -6,7 +6,6 @@ from app.models.service import Service
 from fastapi import HTTPException, status
 from app.schemas.service import CreateService, ServiceResponse, UpdateService
 from sqlalchemy import and_, func
-from sqlalchemy.orm import selectinload
 
 
 
@@ -64,9 +63,13 @@ class TypeServices:
                 detail=f"Service creation failed: {str(e)}",
             )
 
+
     @staticmethod
     async def get_all_services(db: AsyncSession, skip: int = 0, limit: int = 12):
         try:
+            # DEBUG: Log the skip and limit values
+            logger.info(f"Fetching services with skip={skip}, limit={limit}")
+
             # Get total count
             total_stmt = select(func.count(Service.id))
             total_result = await db.execute(total_stmt)
@@ -77,12 +80,15 @@ class TypeServices:
             result = await db.execute(stmt)
             services = result.scalars().all()
 
+            logger.info(f"Fetched {len(services)} services")
+
             return {
                 "total": total,
                 "items": services
             }
+
         except Exception as e:
-            logger.error(f"Service retrieval failed: {str(e)}")
+            logger.error(f"Service retrieval failed: {str(e)}", exc_info=True)
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Service retrieval failed: {str(e)}"
