@@ -5,7 +5,7 @@ from app.models.users import User
 from app.models.service import Service
 from fastapi import HTTPException, status
 from app.schemas.service import CreateService, ServiceResponse, UpdateService
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from sqlalchemy.orm import selectinload
 
 
