@@ -2,14 +2,13 @@ import os
 from fastapi import FastAPI
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
-from app import services
 from app.db.session import get_db
-# from app.db.session import engine
 from sqlalchemy import text
 from app.api.v1 import users, service, service_categories, job_categories, job, business_categories, job_application, review, emergency_contact
 
 
 app = FastAPI()
+
 
 @app.get("/")
 async def read_root():
@@ -53,7 +52,6 @@ async def check_db_connection():
 
 
 if __name__ == "__main__":
-    import uvicorn
     # uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
     port = int(os.environ.get("PORT", 8000))  # Defaults to 8000 for local dev
     uvicorn.run("app.main:app", host="0.0.0.0", port=port)

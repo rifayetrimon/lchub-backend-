@@ -82,7 +82,7 @@ class TypeServices:
     @staticmethod
     async def get_all_services(db: AsyncSession, skip: int = 0):
         try:
-            fixed_limit = 10  # Always return 10 items
+            fixed_limit = 12  # Always return 10 items
             stmt = select(Service).offset(skip).limit(fixed_limit)
             result = await db.execute(stmt)
             services = result.scalars().all()
