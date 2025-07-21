@@ -37,13 +37,13 @@ async def create_service(
 #     return services
 #
 
-@router.get("/", response_model=List[ServiceRead])
+@router.get("/", response_model=Dict[str, Any])
 async def read_all_services(
     skip: int = Query(0, ge=0),
+    limit: int = Query(12, ge=1, le=100),
     db: AsyncSession = Depends(get_db)
 ):
-    services = await TypeServices.get_all_services(db=db, skip=skip)
-    return services
+    return await TypeServices.get_all_services(db=db, skip=skip, limit=limit)
 
 
 
