@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
@@ -7,6 +7,7 @@ from app.models.users import User
 from app.api.deps import get_current_user
 from app.services.service import TypeServices
 from fastapi import Query
+
 
 router = APIRouter(prefix="/services", tags=["services"])
 
@@ -37,7 +38,7 @@ async def create_service(
 #     return services
 #
 
-@router.get("/", response_model=Dict[str, Any])
+@router.get("/", response_model=List[ServiceRead])
 async def read_all_services(
     skip: int = Query(0, ge=0),
     limit: int = Query(12, ge=1, le=100),
