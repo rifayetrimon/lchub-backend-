@@ -36,7 +36,7 @@ async def create_service(
 
 @router.get("/", response_model=ServiceListResponse, status_code=status.HTTP_200_OK)
 async def read_all_services(skip: int = 0, limit: int = 12, db: AsyncSession = Depends(get_db)):
-    items, total = await TypeServices.get_paginated_services(db, skip=skip, limit=limit)
+    items, total = await TypeServices.get_all_services(db, skip=skip, limit=limit)
     return {"items": items, "total": total}
 
 
