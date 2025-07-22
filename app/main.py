@@ -16,7 +16,7 @@ async def read_root():
 
 
 origins = [
-    "http://localhost:3000",        # Your local Next.js dev URL
+    # "http://localhost:3000",        # Your local Next.js dev URL
     "https://lchub-backend-s83j.vercel.app",  # Your deployed frontend
 ]
 
