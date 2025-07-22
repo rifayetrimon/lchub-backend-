@@ -15,13 +15,13 @@ async def read_root():
     return {"message": "Hello from FastAPI on Vercel!"}
 
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],  # ✅ Allow all origins
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # ✅ Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 
