@@ -64,44 +64,44 @@ class TypeServices:
                 detail=f"Service creation failed: {str(e)}",
             )
 
-    @staticmethod
-    async def get_all_services(db: AsyncSession, skip: int = 0, limit: int = 12):
-        try:
-            # Count total services
-            total_stmt = select(func.count(Service.id))
-            total_result = await db.execute(total_stmt)
-            total = total_result.scalar()
-
-            # Get paginated services
-            stmt = select(Service).offset(skip).limit(limit)
-            result = await db.execute(stmt)
-            services = result.scalars().all()
-
-            return {
-                "total": total,
-                "items": services
-            }
-        except Exception as e:
-            logger.error(f"Service retrieval failed: {str(e)}", exc_info=True)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Service retrieval failed: {str(e)}"
-            )
-
     # @staticmethod
-    # async def get_all_services(db: AsyncSession, skip: int = 0):
+    # async def get_all_services(db: AsyncSession, skip: int = 0, limit: int = 12):
     #     try:
-    #         fixed_limit = 12  # Always return 10 items
-    #         stmt = select(Service).offset(skip).limit(fixed_limit)
+    #         # Count total services
+    #         total_stmt = select(func.count(Service.id))
+    #         total_result = await db.execute(total_stmt)
+    #         total = total_result.scalar()
+    #
+    #         # Get paginated services
+    #         stmt = select(Service).offset(skip).limit(limit)
     #         result = await db.execute(stmt)
     #         services = result.scalars().all()
-    #         return services
+    #
+    #         return {
+    #             "total": total,
+    #             "items": services
+    #         }
     #     except Exception as e:
-    #         logger.error(f"Service retrieval failed: {str(e)}")
+    #         logger.error(f"Service retrieval failed: {str(e)}", exc_info=True)
     #         raise HTTPException(
     #             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    #             detail=f"Service retrieval failed: {str(e)}",
+    #             detail=f"Service retrieval failed: {str(e)}"
     #         )
+
+    @staticmethod
+    async def get_all_services(db: AsyncSession, skip: int = 0):
+        try:
+            fixed_limit = 12  # Always return 10 items
+            stmt = select(Service).offset(skip).limit(fixed_limit)
+            result = await db.execute(stmt)
+            services = result.scalars().all()
+            return services
+        except Exception as e:
+            logger.error(f"Service retrieval failed: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Service retrieval failed: {str(e)}",
+            )
 
     @staticmethod
     async def get_service(service_id: int, db: AsyncSession):
