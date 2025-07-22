@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 
 
@@ -34,4 +35,9 @@ class ServiceResponse(BaseModel):
     name: str
     address: str
     phone: str
+
+
+class ServiceListResponse(BaseModel):
+    items: List[ServiceRead]
+    total: int
 

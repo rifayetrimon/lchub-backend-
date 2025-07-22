@@ -2,7 +2,7 @@ from typing import List, Any, Dict
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
-from app.schemas.service import CreateService, ServiceResponse, ServiceRead, UpdateService
+from app.schemas.service import CreateService, ServiceResponse, ServiceRead, UpdateService, ServiceListResponse
 from app.models.users import User
 from app.api.deps import get_current_user
 from app.services.service import TypeServices
@@ -28,20 +28,16 @@ async def create_service(
     return new_service
 
 
-@router.get("/", response_model=List[ServiceRead])
-async def read_all_services(skip: int = 0, db: AsyncSession = Depends(get_db)):
-    services = await TypeServices.get_all_services(db, skip=skip)
-    return services
+# @router.get("/", response_model=List[ServiceRead])
+# async def read_all_services(skip: int = 0, db: AsyncSession = Depends(get_db)):
+#     services = await TypeServices.get_all_services(db, skip=skip)
+#     return services
 
 
-# @router.get("/", response_model=Dict[str, Any])  # make sure you import Dict and Any
-# async def read_all_services(
-#     skip: int = Query(0, ge=0),
-#     limit: int = Query(12, ge=1, le=100),
-#     db: AsyncSession = Depends(get_db)
-# ):
-#     return await TypeServices.get_all_services(db=db, skip=skip, limit=limit)
-
+@router.get("/", response_model=ServiceListResponse, status_code=status.HTTP_200_OK)
+async def read_all_services(skip: int = 0, limit: int = 12, db: AsyncSession = Depends(get_db)):
+    items, total = await TypeServices.get_paginated_services(db, skip=skip, limit=limit)
+    return {"items": items, "total": total}
 
 
 
