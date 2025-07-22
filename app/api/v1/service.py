@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Dict
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
@@ -38,20 +38,13 @@ async def create_service(
 #     return services
 #
 
-@router.get("/", response_model=dict)
-async def read_all_services(skip: int = 0, limit: int = 12, db: AsyncSession = Depends(get_db)):
-    return {
-        "total": 1,
-        "items": [
-            {
-                "id": 1,
-                "name": "Demo Service",
-                "address": "Demo Street",
-                "phone": "0123456789",
-                "service_category_id": 1,
-            }
-        ]
-    }
+@router.get("/", response_model=Dict[str, Any])  # make sure you import Dict and Any
+async def read_all_services(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(12, ge=1, le=100),
+    db: AsyncSession = Depends(get_db)
+):
+    return await TypeServices.get_all_services(db=db, skip=skip, limit=limit)
 
 
 

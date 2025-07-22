@@ -55,6 +55,7 @@ class TypeServices:
                 phone=new_service.phone
             )
 
+
         except Exception as e:
             await db.rollback()  # Rollback on error
             logger.error(f"Service creation failed: {str(e)}", exc_info=True)
@@ -63,14 +64,10 @@ class TypeServices:
                 detail=f"Service creation failed: {str(e)}",
             )
 
-
     @staticmethod
     async def get_all_services(db: AsyncSession, skip: int = 0, limit: int = 12):
         try:
-            # DEBUG: Log the skip and limit values
-            logger.info(f"Fetching services with skip={skip}, limit={limit}")
-
-            # Get total count
+            # Count total services
             total_stmt = select(func.count(Service.id))
             total_result = await db.execute(total_stmt)
             total = total_result.scalar()
@@ -80,13 +77,10 @@ class TypeServices:
             result = await db.execute(stmt)
             services = result.scalars().all()
 
-            logger.info(f"Fetched {len(services)} services")
-
             return {
                 "total": total,
                 "items": services
             }
-
         except Exception as e:
             logger.error(f"Service retrieval failed: {str(e)}", exc_info=True)
             raise HTTPException(
