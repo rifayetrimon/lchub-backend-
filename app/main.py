@@ -15,9 +15,14 @@ async def read_root():
     return {"message": "Hello from FastAPI on Vercel!"}
 
 
+origins = [
+    "http://localhost:3000",        # Your local Next.js dev URL
+    "https://your-frontend.vercel.app",  # Your deployed frontend
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ✅ Allow all origins
+    allow_origins=origins,  # Or ["*"] to allow all
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
